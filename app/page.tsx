@@ -11,6 +11,7 @@ export default function Home() {
   const [flag, setFlag] = useState<boolean>(false);
   const [language, setLanguage] = useState<languageName>("Javascript")
   const [code, setCode] = useState<string | undefined>("");
+  const [test_output, setTestOutput] = useState([])
 
   function handleEditor(value: string | undefined, event: any) {
     setCode(value);
@@ -23,7 +24,8 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
+        console.log(res)
+        setTestOutput(res.success_message);
       });
   }
 
@@ -32,7 +34,7 @@ export default function Home() {
   return (
     <div style={{ background: "#1b1b1b" }}>
       <div className="w-screen py-1 flex justify-center">
-        <button className="bg-lime-600 px-6 py-1 rounded-l">Run</button>
+        <button className="bg-lime-600 px-6 py-1 rounded-l" onClick={handleRunCode}>Run</button>
         <button className="bg-indigo-500 px-6 py-1 rounded-r">Submit</button>
       </div>
       <div className="flex flex-row w-screen font-sans black">
@@ -70,7 +72,7 @@ export default function Home() {
             style={{ height: "calc(50% - 52px)" }}
             className="w-full border-[#717171] border rounded"
           >
-            <TestCaseContainer language={language}/>
+            <TestCaseContainer test_output={test_output} language={language}/>
           </div>
         </div>
       </div>

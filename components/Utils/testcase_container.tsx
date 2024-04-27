@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { test_cases } from "../constants/TestCase"
 
-export default function TestCaseContainer() {
+export default function TestCaseContainer({test_output, language}) {
     const [ind, setInd] = useState(0);
     const [test_cases_state, setTestCases] = useState<string[][]>([[]]);
 
@@ -32,7 +32,7 @@ export default function TestCaseContainer() {
                         <code key={idx} className="block bg-gray-700 h-10 p-2 rounded m-4">{input_case}</code>
                     ))}
                     <h6 className="mx-4 uppercase text-gray-400">Output</h6>
-                    <code className="block bg-gray-700 h-10 p-2 rounded m-4">{"input_case"}</code>
+                    <code className="block bg-gray-700 h-10 p-2 rounded m-4">{ test_output.length > 0 ? test_output[ind].stdout : ""}</code>
                 </div>
             </Suspense>
         </div>
