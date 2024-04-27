@@ -7,16 +7,20 @@ import { exec } from "child_process";
 
 
 type OutputResult = {
-  stderr : string,
-  stdout : string
+  stderr?: string | "",
+  stdout?: string | "", 
+  error?: string | ""
 }
 
 
 const execPromise = (command: string) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<OutputResult>((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if(error){
-        reject(error)
+        const error_response: OutputResult = {
+          error: JSON.stringify(error)
+        }
+        reject(error_response)
       }
       const result: string = stdout.replace(/\s/g, '').replace('\n','');
       const console_statement: string = stderr.replace(/\s/g, '').replace('\n','');
@@ -25,7 +29,6 @@ const execPromise = (command: string) => {
         stderr : console_statement,
         stdout : result
       }
-
       resolve(response);
     });
   });
@@ -36,7 +39,8 @@ export async function POST(request: NextRequest) {
   try{
     const rq: Promise<any> = await request.json();
     const unique_id: String = randomUUID();
-
+    // @TODO - Take input from the Databases
+    // Get the function name
     const test_cases: TestCase[] = [
       {
         question_id: unique_id + '1',
@@ -62,17 +66,13 @@ export async function POST(request: NextRequest) {
       const written_code = `${rq}${test_case.default_code}`
       const file = `solution-${unique_id}.js`
       await fs.writeFileSync(`codes/${file}`, written_code);
-      // docker build -t codeeditor --build-arg FILE_PATH=${file} .
       const docker_command = `docker cp codes/${file} ecstatic_kare:/codefiles && docker exec ecstatic_kare node codefiles/${file}`
-      const stdout = await execPromise(docker_command);
-      console.log(stdout)
-
+      const stdout: OutputResult = await execPromise(docker_command);
       stdout_res.push(stdout);
     }
 
-    return NextResponse.json({success_message: stdout_res})
+    return NextResponse.json({data: stdout_res})
   }catch(e){
-    console.log(e)
     return NextResponse.json({data: e})
   }
 }
