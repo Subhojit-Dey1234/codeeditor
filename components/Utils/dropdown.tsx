@@ -1,4 +1,4 @@
-export function DropDown({ setLanguage, flag }) {
+export function DropDown({ setLanguage, setFlag, flag }) {
   const list = ["Java", "Javascript", "C++", "Python"];
   return (
     <div
@@ -6,7 +6,10 @@ export function DropDown({ setLanguage, flag }) {
       style={{ display: flag ? "" : "none" }}
     >
       {list.map((l, ind) => (
-        <p className="m-2 cursor-pointer" onClick={()=>setLanguage(l)} key={ind}>{l}</p>
+        <p className="m-2 cursor-pointer" onClick={()=>{
+          setLanguage(l)
+          setFlag(false)
+        }} key={ind}>{l}</p>
       ))}
     </div>
   );

@@ -1,19 +1,15 @@
 "use client";
 
-import { Question } from "@/backend/types/Questions";
-import { DropDown } from "@/components/Utils/Dropdown";
-import { PromblemStatementContainer } from "@/components/Utils/problem";
+import { DropDown } from "@/components/Utils/dropdown";
+import ProblemParser from "@/components/Utils/problem_parser";
+import TestCaseContainer from "@/components/Utils/testcase_container";
+import { LANGUAGE, languageName } from "@/components/types/CodeEditor";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 
-const question: Question = {
-  id: "",
-  basic_code: "var twoSum = function(nums, target) {\n\n};",
-};
-
 export default function Home() {
   const [flag, setFlag] = useState<boolean>(false);
-  const [language, setLanguage] = useState<string>("Javascript")
+  const [language, setLanguage] = useState<languageName>("Javascript")
   const [code, setCode] = useState<string | undefined>("");
 
   function handleEditor(value: string | undefined, event: any) {
@@ -31,9 +27,11 @@ export default function Home() {
       });
   }
 
+  const language_layout = LANGUAGE[language]
+
   return (
     <div style={{ background: "#1b1b1b" }}>
-      <div className="w-screen py-3 flex justify-center">
+      <div className="w-screen py-1 flex justify-center">
         <button className="bg-lime-600 px-6 py-1 rounded-l">Run</button>
         <button className="bg-indigo-500 px-6 py-1 rounded-r">Submit</button>
       </div>
@@ -45,9 +43,9 @@ export default function Home() {
             padding: "20px",
             background: "#161515",
           }}
-          className="border-slate-700	border-2 rounded-lg m-1"
+          className="border-[#717171]	border rounded m-1"
         >
-          <PromblemStatementContainer />
+          <ProblemParser/>
         </div>
         <div
           className=""
@@ -56,20 +54,24 @@ export default function Home() {
           <div className="h-14 w-full flex flex-row items-center">
             <span className="font-sans text-xs uppercase text-center ml-2 relative">
               <p className="cursor-pointer" onClick={()=>setFlag(!flag)}>{language}</p>
-              <DropDown setLanguage={setLanguage} flag={flag}/>
+              <DropDown setLanguage={setLanguage} setFlag={setFlag} flag={flag}/>
             </span>
           </div>
           <Editor
             height="47.5vh"
-            defaultLanguage="javascript"
-            defaultValue={question.basic_code.toString()}
+            defaultLanguage={language_layout.lang}
+            defaultValue={language_layout.basic_code.toString()}
             onChange={handleEditor}
+            language={language_layout.lang}
+            value={language_layout.basic_code.toString()}
             theme="vs-dark"
           />
           <div
-            style={{ height: "calc(50% - 56px)" }}
-            className="w-full border-slate-700 border-2 rounded-lg"
-          ></div>
+            style={{ height: "calc(50% - 52px)" }}
+            className="w-full border-[#717171] border rounded"
+          >
+            <TestCaseContainer language={language}/>
+          </div>
         </div>
       </div>
     </div>

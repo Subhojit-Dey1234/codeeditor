@@ -3,7 +3,7 @@ type Props = { children: React.ReactNode };
 
 const CustomParagraph: React.FC<Props> = ({children}) => {
   return (
-    <div className="text-base leading-relaxed">
+    <div className="text-sm leading-relaxed">
       { children }
     </div>
   );
