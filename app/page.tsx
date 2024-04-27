@@ -1,6 +1,7 @@
 "use client";
 
 import { Question } from "@/backend/types/Questions";
+import { DropDown } from "@/components/Utils/Dropdown";
 import { PromblemStatementContainer } from "@/components/Utils/problem";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
@@ -11,6 +12,8 @@ const question: Question = {
 };
 
 export default function Home() {
+  const [flag, setFlag] = useState<boolean>(false);
+  const [language, setLanguage] = useState<string>("Javascript")
   const [code, setCode] = useState<string | undefined>("");
 
   function handleEditor(value: string | undefined, event: any) {
@@ -40,17 +43,20 @@ export default function Home() {
             width: "50vw",
             height: "95vh",
             padding: "20px",
-            background:"#161515"
+            background: "#161515",
           }}
-
           className="border-slate-700	border-2 rounded-lg m-1"
         >
           <PromblemStatementContainer />
         </div>
-        <div className="" style={{ width: "50vw", height: "95vh", background: "#161515" }}>
+        <div
+          className=""
+          style={{ width: "50vw", height: "95vh", background: "#161515" }}
+        >
           <div className="h-14 w-full flex flex-row items-center">
-            <span className="font-sans text-xs uppercase text-center ml-2">
-              javascript
+            <span className="font-sans text-xs uppercase text-center ml-2 relative">
+              <p className="cursor-pointer" onClick={()=>setFlag(!flag)}>{language}</p>
+              <DropDown setLanguage={setLanguage} flag={flag}/>
             </span>
           </div>
           <Editor

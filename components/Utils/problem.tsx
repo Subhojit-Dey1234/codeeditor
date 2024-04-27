@@ -39,6 +39,16 @@ export function PromblemStatementContainer() {
           <CustomCodeBlock codeblock={"Input: nums = [3,3], target = 6\nOutput: [0,1]"} />
         </CustomParagraph>
       </div>
+
+      <div style={{ margin: "40px 0" }}>
+        <CustomHeader2>Constraints</CustomHeader2>
+        <ul className="list-disc relative left-[15px]">
+          <li className="m-2"><CustomInlineCode>{"2 <= nums.length <= 104"}</CustomInlineCode></li>
+          <li className="m-2"><CustomInlineCode>{"-109 <= nums[i] <= 109"}</CustomInlineCode></li>
+          <li className="m-2"><CustomInlineCode>{"-109 <= target <= 109"}</CustomInlineCode></li>
+          <li className="m-2"><CustomInlineCode>{"Only one valid answer exists."}</CustomInlineCode></li>
+        </ul>
+      </div>
     </>
   );
 }
