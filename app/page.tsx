@@ -4,6 +4,7 @@ import { DropDown } from "@/components/Utils/dropdown";
 import ProblemParser from "@/components/Utils/problem_parser";
 import TestCaseContainer from "@/components/Utils/testcase_container";
 import { LANGUAGE, languageName } from "@/components/types/CodeEditor";
+import { OutputResult } from "@/components/types/OutputResult";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 
@@ -11,7 +12,7 @@ export default function Home() {
   const [flag, setFlag] = useState<boolean>(false);
   const [language, setLanguage] = useState<languageName>("Javascript")
   const [code, setCode] = useState<string | undefined>("");
-  const [test_output, setTestOutput] = useState([])
+  const [test_output, setTestOutput] = useState<OutputResult[]>([])
 
   function handleEditor(value: string | undefined, event: any) {
     setCode(value);
@@ -24,8 +25,7 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
-        setTestOutput(res.success_message);
+        setTestOutput(res.data);
       });
   }
 

@@ -3,11 +3,7 @@ export type CodeEditor = {
     basic_code: string
 }
 
-// const list = ["Java", "Javascript", "C++", "Python"];
-
-export type languageName = "Javascript" | "C++" | "Python"
-
-
+export type languageName = "Javascript" | "C++" | "Python";
 export const LANGUAGE: Record<languageName, CodeEditor> = {
     "Javascript": {
         basic_code: `var twoSum = function(nums, target) {

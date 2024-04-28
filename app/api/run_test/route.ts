@@ -4,13 +4,7 @@ import type {TestCase } from "@/backend/types/Questions.ts"
 import fs from 'fs';
 import { randomUUID } from "crypto";
 import { exec } from "child_process";
-
-
-type OutputResult = {
-  stderr?: string | "",
-  stdout?: string | "", 
-  error?: string | ""
-}
+import { OutputResult } from "@/components/types/OutputResult";
 
 
 const execPromise = (command: string) => {
@@ -66,7 +60,7 @@ export async function POST(request: NextRequest) {
       const written_code = `${rq}${test_case.default_code}`
       const file = `solution-${unique_id}.js`
       await fs.writeFileSync(`codes/${file}`, written_code);
-      const docker_command = `docker cp codes/${file} ecstatic_kare:/codefiles && docker exec ecstatic_kare node codefiles/${file}`
+      const docker_command = `docker cp codes/${file} codeeditor:/codefiles && docker exec codeeditor node codefiles/${file}`
       const stdout: OutputResult = await execPromise(docker_command);
       stdout_res.push(stdout);
     }
