@@ -4,7 +4,7 @@ import type {TestCase } from "@/backend/types/Questions.ts"
 import fs from 'fs';
 import { randomUUID } from "crypto";
 import { exec } from "child_process";
-import { OutputResult } from "@/components/types/OutputResult";
+import { OutputResult } from "@/components/Types/OutputResult";
 
 
 const execPromise = (command: string) => {
@@ -12,6 +12,7 @@ const execPromise = (command: string) => {
     exec(command, (error, stdout, stderr) => {
       if(error){
         const error_response: OutputResult = {
+          stderr: JSON.stringify(stderr),
           error: JSON.stringify(error)
         }
         reject(error_response)
@@ -64,9 +65,8 @@ export async function POST(request: NextRequest) {
       const stdout: OutputResult = await execPromise(docker_command);
       stdout_res.push(stdout);
     }
-
     return NextResponse.json({data: stdout_res})
   }catch(e){
-    return NextResponse.json({data: e})
+    return NextResponse.json({data: e},{status: 400})
   }
 }

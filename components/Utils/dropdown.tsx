@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { languageName } from "../types/CodeEditor";
+import { languageName } from "../Types/CodeEditor";
 
 interface IProps {
   setLanguage: Dispatch<SetStateAction<languageName>>;
@@ -8,9 +8,8 @@ interface IProps {
 }
 // { setLanguage: Dispatch<SetStateAction<boolean>>, setFlag, flag }
 
-export function DropDown(props: IProps) {
-  const { flag, setLanguage, setFlag } = props;
-  const language_list: languageName[] = ["Javascript", "C++", "Python"];
+export function DropDown({flag, setLanguage, setFlag}: IProps) {
+  const language_list: languageName[] = ["Javascript"];
   return (
     <div
       className="absolute top-5 z-10 text-left p-3 border border-slate-700 rounded-md bg-black"

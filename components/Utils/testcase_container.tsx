@@ -1,24 +1,25 @@
 import { Suspense, useEffect, useState } from "react";
 import { test_cases } from "../constants/TestCase";
-import { OutputResult } from "../types/OutputResult";
-import { languageName } from "../types/CodeEditor";
+import { OutputResult } from "../Types/OutputResult";
+import { languageName } from "../Types/CodeEditor";
 
 type IProps = {
   test_output?: OutputResult[];
   language?: languageName;
   flag?: boolean;
+  error_output?: string | null;
 };
 
 function ResultContainer(props: IProps) {
   const { flag } = props;
   return (
     <>
-      {flag ? (
-        <span className="border border-red-600 rounded px-3 py-1 text-red-600">
+      {!flag ? (
+        <span className="border border-red-600 rounded px-3 py-1 bg-red-300 text-red-600">
           FAILED
         </span>
       ) : (
-        <span className="border border-green-500 rounded px-3 py-1 text-green-500">
+        <span className="border border-green-500 rounded px-3 py-1 bg-green-100 text-green-500">
           SUCCESS
         </span>
       )}
@@ -26,8 +27,7 @@ function ResultContainer(props: IProps) {
   );
 }
 
-export default function TestCaseContainer(props: IProps) {
-  const { test_output, language } = props;
+export default function TestCaseContainer({error_output,test_output, language}: IProps) {
   const [ind, setInd] = useState(0);
   const [test_cases_state, setTestCases] = useState<string[][]>([[]]);
   let flag = null;
@@ -52,11 +52,10 @@ export default function TestCaseContainer(props: IProps) {
       <Suspense fallback={<p>{"Loading...."}</p>}>
         <div className="flex justify-center items-center w-full h-14 bg-gray-800">
           {flag !== null && (
-            <span className="w-full h-full cursor-pointer border text-center flex items-center justify-center border-gray-600">
+            <span className="w-full h-full border text-center flex items-center justify-center border-gray-600">
               <ResultContainer flag={flag} />
             </span>
           )}
-          {/* <span className="w-full h-full cursor-pointer border text-center flex items-center justify-center border-gray-600">Output</span> */}
         </div>
         <div className="relative top-2 h-20 flex">
           {test_cases_state.map((_, ind) => (
@@ -82,6 +81,9 @@ export default function TestCaseContainer(props: IProps) {
               ? test_output[ind].stdout
               : ""}
           </code>
+          {/* {error_output && <code className="block bg-gray-700 h-20 p-2 rounded m-4 overflow-y-auto">
+            {JSON.parse(error_output.stderr)}
+          </code>} */}
         </div>
       </Suspense>
     </div>

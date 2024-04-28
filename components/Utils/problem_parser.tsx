@@ -1,4 +1,3 @@
-import type { TestCase } from "@/components/types/TestCase";
 import MarkdownEditor from "@uiw/react-markdown-editor";
 import { brief_description, constraints, question_header, test_cases } from "../constants/TestCase";
 
