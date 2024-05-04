@@ -14,7 +14,7 @@ export default function Home() {
   const [language, setLanguage] = useState<languageName>("Javascript")
   const [code, setCode] = useState<string | undefined>("");
   const [test_output, setTestOutput] = useState<OutputResult[]>([])
-  const [error_output, setErrorOutput] = useState(null)
+  const [error_output, setErrorOutput] = useState<OutputResult | null>(null)
 
   function handleEditor(value: string | undefined, event: any) {
     setCode(value);
@@ -23,7 +23,6 @@ export default function Home() {
   function handleRunCode() {
     axios.post("/api/run_test/",JSON.stringify(code))
     .then((res)=>{
-      console.log(res)
       if(res.status === 200){
         setTestOutput(res.data.data);
         setErrorOutput(null);

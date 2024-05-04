@@ -14,5 +14,6 @@ type ResultType = {
 export type Question = {
     fn : string,
     input_params_name: string[]
-    test_cases: ResultType[]
+    test_cases: ResultType[],
+    basic_code: string 
 }

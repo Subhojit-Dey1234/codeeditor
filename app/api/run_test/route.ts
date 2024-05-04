@@ -5,6 +5,12 @@ import fs from 'fs';
 import { randomUUID } from "crypto";
 import { exec } from "child_process";
 import { OutputResult } from "@/components/Types/OutputResult";
+import { QUESTION } from "@/components/constants/TestCase";
+import { Question } from "@/components/Types/TestCase";
+
+function create_execution_function(ind: number , question: Question, input_params: string[]){
+  return `const res_${ind} = ${question.fn}(${input_params}); \n console.log(res_${ind}); console.log("$@")`;
+}
 
 
 const execPromise = (command: string) => {
@@ -34,39 +40,35 @@ export async function POST(request: NextRequest) {
   try{
     const rq: Promise<any> = await request.json();
     const unique_id: String = randomUUID();
-    // @TODO - Take input from the Databases
-    // Get the function name
-    const test_cases: TestCase[] = [
-      {
-        question_id: unique_id + '1',
-        default_code: "\nvar res = twoSum([2,7,11,15],9);\n\nconsole.log(res)\n",
-        result: "6"
-      },
-      {
-        question_id: unique_id + '2',
-        default_code: "\nvar res = twoSum([3,2,4],6);\n\nconsole.log(res)\n",
-        result: "9"
-      },
-      {
-        question_id: unique_id + '3',
-        default_code: "\nvar res = twoSum([3,3],6);\n\nconsole.log(res)\n",
-        result: "6"
+    const question: Question = QUESTION;
+    let stdout_res: OutputResult[] = [];
+
+    let execution_fn = "";
+
+    for(let i = 0; i < question.test_cases.length; i++){
+      let test_case = question.test_cases[i];
+      execution_fn += `${create_execution_function(i,question,test_case.input)} \n`;
+    }
+
+    const written_code = `${rq}\n${execution_fn}`
+    const file = `solution-${unique_id}.js`
+    await fs.writeFileSync(`codes/${file}`, written_code);
+    const docker_command = `docker cp codes/${file} codeeditor:/codefiles && docker exec codeeditor node codefiles/${file}`
+    const stdout: OutputResult = await execPromise(docker_command);
+    const stdout_arr: string[] | undefined = stdout.stdout?.split("$@");
+
+    if(stdout_arr !== undefined){
+      for(let r of stdout_arr){
+        if(r.length === 0) continue;
+
+        const q: OutputResult = {
+          stdout: r
+        }
+        stdout_res.push(q);
       }
-    ]
-
-
-    let stdout_res: OutputResult[] = [] 
-
-    for(let test_case of test_cases){
-      const written_code = `${rq}${test_case.default_code}`
-      const file = `solution-${unique_id}.js`
-      await fs.writeFileSync(`codes/${file}`, written_code);
-      const docker_command = `docker cp codes/${file} codeeditor:/codefiles && docker exec codeeditor node codefiles/${file}`
-      const stdout: OutputResult = await execPromise(docker_command);
-      stdout_res.push(stdout);
     }
     return NextResponse.json({data: stdout_res})
   }catch(e){
-    return NextResponse.json({data: e},{status: 400})
+    return NextResponse.json({data: e},{status: 500})
   }
 }

@@ -46,8 +46,19 @@ export const QUESTION: Question = {
     input_params_name: ["nums", "target"],
     test_cases: [
         {
+            input: ["[2,7,11,15]","9"],
+            output: ["[0,1]"]
+        },
+        {
+            input: ["[3,2,4]","6"],
+            output: ["[1,2]"]
+        },
+        {
             input:["[3,3]","6"],
             output: ["[0,1]"]
-        }
-    ]
+        },
+    ],
+    basic_code: `var twoSum = function(nums, target) {
+        // Write your code here   
+    };`
 }
